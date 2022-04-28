@@ -1,7 +1,8 @@
 ﻿using Dapper;
 using eBay_DB.Models;
 using Npgsql;
-using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace eBay_DB.Repositories
 {
@@ -16,15 +17,8 @@ namespace eBay_DB.Repositories
         public static void AddProduct()
         {
             Product productNew = new Product();
-
-
-            Console.Write("Input name of product: ");
-            productNew.Name = Console.ReadLine();
-            Console.Write("Input name of product: ");
-            productNew.Price = Convert.ToDecimal(Console.ReadLine());
-            Console.Write("Input id of customer: ");
-            productNew.Customer = CustomersRepo.GetCustomerById(Convert.ToInt32(Console.ReadLine()));
-
+            productNew.CreateProductWithUser();
+           
             InsertProductsWithParams(productNew);
         }
 
@@ -51,24 +45,67 @@ namespace eBay_DB.Repositories
             parameters.Add(value: new NpgsqlParameter(parameterName: "customer_id", value: product.Customer.Id));
             string affectedRowsCount = cmd.ExecuteNonQuery().ToString();
         }
-
-        public static Product GetProductById(int id)
+        public static List<Product> GetAllProducts()
         {
             var query = @"SELECT 
-                        id, first_name, last_name, email, address
-                        FROM products
-                        WHERE products.id=@LookUpId";
+                        p.id,
+                        p.name, 
+                        p.price,
+                        p.customer_id,
+                        c.id,
+                        c.first_name,
+                        c.last_name,
+                        c.email,
+                        c.address
+                        FROM products p
+                        JOIN customers c on c.id = p.customer_id
+                        ORDER BY p.name";
 
             using (var connection = new NpgsqlConnection(Data.Config.SqlConnectionString))
             {
-                var product = connection.QueryFirstOrDefault<Product>(
+                var list = connection.Query<Product, Customer, Product>(
+                    sql: query,
+                    map: (Product product, Customer customer) =>
+                    {
+                        product.Customer = customer;
+                        return product;
+                    },
+                    splitOn: "customer_id"
+                    );
+                return list.ToList();
+            }
+        }
+        
+        public static Product GetProductById(int id)
+        {
+            var query = @"SELECT 
+                        p.id,
+                        p.name, 
+                        p.price,
+                        p.customer_id
+                        FROM products p
+                        JOIN customers c on c.id = p.customer_id
+                        ORDER BY p.name
+                        WHERE products.id = @LookUpId";
+
+            using (var connection = new NpgsqlConnection(Data.Config.SqlConnectionString))
+            {
+                var list1 = connection.QueryFirstOrDefault(query);
+                var list = connection.Query<Product, Customer, Product>(
                     sql: query,
                     param: new
                     {
                         LookUpId = id,
-                    });
-                return product;
+                    },
+                    map: (Product product, Customer customer) =>
+                    {
+                        product.Customer = customer;
+                        return product;
+                    }
+                    );
+                return list.ToList().FirstOrDefault<Product>();
             }
+           
         }
 
     }

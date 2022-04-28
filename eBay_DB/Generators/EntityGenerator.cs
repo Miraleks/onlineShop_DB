@@ -26,18 +26,11 @@ namespace eBay_DB.Generators
             }
         }
 
-        public static void GenerateProduct(int count)
+        public static void AddProduct(int count)
         {
             while(count > 0)
-            {
-                var product = new Product();
-                var rnd = new Random();
-                product.Name = Faker.Lorem.Words(2).ToString();
-                product.Price = (decimal)(rnd.NextDouble()*100);
-                product.Customer = CustomersRepo.GetCustomerById(rnd.Next(1, 22));
-
-                ProductsRepo.AddProduct(product);
-
+            {                
+                ProductsRepo.AddProduct(GenerateProduct());
                 count--;
             }
         }
@@ -50,18 +43,40 @@ namespace eBay_DB.Generators
             while (count > 0)
             {
                 var order = new Order();
-                var product = new Product();
+                //var product = new Product();
 
                 while(productsInOrder > 0)
                 {
+                    //Product product1 = new Product();
                     //id ордера - последнее с автоматическим созданием записи и возвратом id созданной записи
                     //случайная выборка из products по id
                     //случайное назначение количества выбранных продуктов
                     //подсчет суммы продуктов и внесение в поле ордера
+
+                    var newProduct = new Product();
+                    
+
                 }
 
 
             }
+        }
+
+        static Product GenerateProduct()
+        {
+            var rnd = new Random();
+            var rndName = Faker.Lorem.Words(2);
+            string result = "";
+            foreach (var item in rndName)
+            {
+                result = result + item + " ";
+            }
+            var Name = result;
+            var Price = (decimal)(rnd.NextDouble() * 100);
+            var Customer = CustomersRepo.GetCustomerById(rnd.Next(1, 22));
+            var product = new Product(Name, Price, Customer);
+
+            return product;
         }
 
     }

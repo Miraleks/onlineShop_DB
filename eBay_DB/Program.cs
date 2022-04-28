@@ -28,22 +28,33 @@ namespace eBay_DB
 
             //CustomerGenerator.Generate(20);
 
-            //var customers = repositories.customersrepo.getallcustomers();
+            //var customers = CustomersRepo.GetAllCustomers();
 
-            //foreach(var elem in customers)
+            //foreach (var elem in customers)
             //{
-            //    console.writeline(elem.tostring());
+            //    Console.WriteLine(elem);
             //}
 
-            var customer1 = Repositories.CustomersRepo.GetCustomerByEmail("kassandra_berge@stokes.uk");
-            var customer2 = Repositories.CustomersRepo.GetCustomerByEmail("kassandra@stokes.uk");
-            var customer3 = Repositories.CustomersRepo.GetCustomerById(id: 20);
+            //var customer1 = Repositories.CustomersRepo.GetCustomerByEmail("kassandra_berge@stokes.uk");
+            //var customer2 = Repositories.CustomersRepo.GetCustomerByEmail("kassandra@stokes.uk");
+            //var customer3 = Repositories.CustomersRepo.GetCustomerById(id: 20);
 
-            Console.WriteLine(customer1);
-            Console.WriteLine(customer2 == null ? "Пользователь не найден." : customer2);
-            Console.WriteLine(customer3 == null ? "Пользователь не найден." : customer3);
+            //Console.WriteLine(customer1);
+            //Console.WriteLine(customer2 == null ? "Пользователь не найден." : customer2);
+            //Console.WriteLine(customer3 == null ? "Пользователь не найден." : customer3);
 
-            CustomersRepo.AddNewCustomer();
+            //CustomersRepo.AddNewCustomer();
+
+            //EntityGenerator.AddProduct(20);
+
+            var products = ProductsRepo.GetAllProducts();
+
+            foreach (var item in products)
+            {
+                Console.WriteLine(item);
+            }
+
+
 
         }
     }

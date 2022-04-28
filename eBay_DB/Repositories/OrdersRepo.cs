@@ -39,5 +39,24 @@ namespace eBay_DB.Repositories
 
         }
 
+        public static Order GetOrderById(int id)
+        {
+            var query = @"SELECT 
+                        id, first_name, last_name, email, address
+                        FROM orders
+                        WHERE orders.id=@LookUpId";
+
+            using (var connection = new NpgsqlConnection(Data.Config.SqlConnectionString))
+            {
+                var order = connection.QueryFirstOrDefault<Order>(
+                    sql: query,
+                    param: new
+                    {
+                        LookUpId = id,
+                    });
+                return order;
+            }
+        }
+
     }
 }
