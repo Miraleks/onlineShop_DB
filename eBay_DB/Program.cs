@@ -1,7 +1,7 @@
 ﻿using eBay_DB.Generators;
 using System;
 using eBay_DB.Repositories;
-
+using eBay_DB.Models;
 
 namespace eBay_DB
 {
@@ -18,7 +18,8 @@ namespace eBay_DB
         /// 
         /// 
         /// </summary>
-        /// <param name="args"></param>
+
+
         static void Main(string[] args)
         {
             TablesGenerators.CreateCustomerTable();
@@ -26,7 +27,11 @@ namespace eBay_DB
             TablesGenerators.CreateOrdersTable();
             TablesGenerators.CreateOrderProductTable();
 
-            //CustomerGenerator.Generate(20);
+            /*
+             генератор пользователей
+            */
+
+            //EntityGenerator.GenerateCustomer(20);
 
             //var customers = CustomersRepo.GetAllCustomers();
 
@@ -45,16 +50,43 @@ namespace eBay_DB
 
             //CustomersRepo.AddNewCustomer();
 
+            /*
+             генератор продуктов
+             */
             //EntityGenerator.AddProduct(20);
 
-            var products = ProductsRepo.GetAllProducts();
+            //var products = ProductsRepo.GetAllProducts();
 
-            foreach (var item in products)
+            //foreach (var item in products)
+            //{
+            //    Console.WriteLine(item);
+            //}
+
+            /*
+             добавление продуктов в ордер
+             */
+
+            //OrdersRepo.AddProductInOrderDialog();
+
+            //var prod = ProductsRepo.GetProductById(12);
+
+            //Console.WriteLine(prod);
+
+            //var collect = OrdersProductsRepo.GetAllProductsByOrderId(7);
+
+            //foreach (var item in collect)
+            //{
+            //    Console.WriteLine(item.product);
+            //}
+
+
+
+            var orders = OrdersRepo.GetOrders();
+
+            foreach (var item in orders)
             {
                 Console.WriteLine(item);
             }
-
-
 
         }
     }

@@ -76,35 +76,10 @@ namespace eBay_DB.Repositories
             }
         }
         
-        public static Product GetProductById(int id)
+        public static Product GetProductById(long id)
         {
-            var query = @"SELECT 
-                        p.id,
-                        p.name, 
-                        p.price,
-                        p.customer_id
-                        FROM products p
-                        JOIN customers c on c.id = p.customer_id
-                        ORDER BY p.name
-                        WHERE products.id = @LookUpId";
-
-            using (var connection = new NpgsqlConnection(Data.Config.SqlConnectionString))
-            {
-                var list1 = connection.QueryFirstOrDefault(query);
-                var list = connection.Query<Product, Customer, Product>(
-                    sql: query,
-                    param: new
-                    {
-                        LookUpId = id,
-                    },
-                    map: (Product product, Customer customer) =>
-                    {
-                        product.Customer = customer;
-                        return product;
-                    }
-                    );
-                return list.ToList().FirstOrDefault<Product>();
-            }
+            var productById = GetAllProducts().Where(result => result.Id == id).FirstOrDefault();
+            return productById;
            
         }
 

@@ -11,16 +11,26 @@ namespace eBay_DB.Models
 
     {
 
-        void AddProduct(Product product, int value)
+        void AddProductToOrder(Product product, int value)
         {
             //добавление в OrderProduct
         }
 
         public long Id { get; set; }
 
-        public System.DateTime Date { get; set; }
+        private System.DateTime date;
+        public System.DateTime Date 
+        {
+            get { return date; }
+            set { date = System.DateTime.Parse(value.ToString()); } 
+        }
 
         public decimal Sum { get; set; }
+
+        public override string ToString()
+        {
+            return $"Product: ID={this.Id}, Date: {this.Date}, Sum: {this.Sum}";
+        }
 
     }
 }

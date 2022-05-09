@@ -34,8 +34,6 @@ namespace eBay_DB.Generators
             using NpgsqlCommand cmd = new NpgsqlCommand(cmdText: sql, connection: connection);
 
             string affectedRowsCount = cmd.ExecuteNonQuery().ToString();
-
-            Console.WriteLine(value: $"Created CUSTOMERS table.");
         }
 
         public static void CreateProductsTable()
@@ -61,8 +59,6 @@ namespace eBay_DB.Generators
             using NpgsqlCommand cmd = new NpgsqlCommand(cmdText: sql, connection: connection);
 
             string affectedRowsCount = cmd.ExecuteNonQuery().ToString();
-
-            Console.WriteLine(value: $"Created PRODUCTS table.");
         }
 
         public static void CreateOrdersTable()
@@ -86,8 +82,6 @@ namespace eBay_DB.Generators
             using NpgsqlCommand cmd = new NpgsqlCommand(cmdText: sql, connection: connection);
 
             string affectedRowsCount = cmd.ExecuteNonQuery().ToString();
-
-            Console.WriteLine(value: $"Created ORDERS table.");
         }
 
         public static void CreateOrderProductTable()
@@ -115,9 +109,6 @@ namespace eBay_DB.Generators
             using NpgsqlCommand cmd = new NpgsqlCommand(cmdText: sql, connection: connection);
 
             string affectedRowsCount = cmd.ExecuteNonQuery().ToString();
-
-            Console.WriteLine(value: $"Created ORDERS_PRODUCTS table.");
-
         }
 
     }
