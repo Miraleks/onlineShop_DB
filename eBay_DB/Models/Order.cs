@@ -18,18 +18,14 @@ namespace eBay_DB.Models
 
         public long Id { get; set; }
 
-        private System.DateTime date;
-        public System.DateTime Date 
-        {
-            get { return date; }
-            set { date = System.DateTime.Parse(value.ToString()); } 
-        }
+        private System.DateTime CreatedAt { get; set; }
+        
 
         public decimal Sum { get; set; }
 
         public override string ToString()
         {
-            return $"Product: ID={this.Id}, Date: {this.Date}, Sum: {this.Sum}";
+            return $"Product: ID={this.Id}, Date: {this.CreatedAt}, Sum: {this.Sum}";
         }
 
     }
