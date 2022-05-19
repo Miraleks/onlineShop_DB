@@ -10,8 +10,9 @@ namespace eBay_DB.Repositories
 {
     class OrdersRepo
     {
-        public static void InsertOrdersWithParams(DateTime dateTime, decimal sum)
+        public static void CreateOrder()
         {
+            var createDate = DateTime.Today;
             using NpgsqlConnection connection = new NpgsqlConnection(connectionString: Data.Config.SqlConnectionString);
             connection.Open();
 
@@ -21,8 +22,8 @@ namespace eBay_DB.Repositories
 
             using NpgsqlCommand cmd = new NpgsqlCommand(cmdText: sql, connection: connection);
             NpgsqlParameterCollection parameters = cmd.Parameters;
-            parameters.Add(value: new NpgsqlParameter(parameterName: "created_at", value: dateTime));
-            parameters.Add(value: new NpgsqlParameter(parameterName: "sum", value: sum));
+            parameters.Add(value: new NpgsqlParameter(parameterName: "created_at", value: createDate));
+            parameters.Add(value: new NpgsqlParameter(parameterName: "sum", value: 0));
 
             string affectedRowsCount = cmd.ExecuteNonQuery().ToString();
         }
@@ -65,11 +66,11 @@ namespace eBay_DB.Repositories
 
         internal static void AddProductInOrderDialog()
         {
-            var createDate = DateTime.Today;
-            decimal sum = 0;
-            OrdersRepo.InsertOrdersWithParams(createDate, sum);
+            OrdersRepo.CreateOrder();
             var orderId = LastOrderId();
-            bool create = false;
+            int countOfProductsInOrder = 0;
+
+
             while (true)
             {
                 Console.WriteLine("Введите код продукта или \"выход\" для выхода.");
@@ -77,32 +78,32 @@ namespace eBay_DB.Repositories
 
                 if (input == "выход")
                 {
+                    Console.WriteLine(countOfProductsInOrder > 0 ? $"Добавлено в ордер {countOfProductsInOrder} продуктов" : "Продукты не добавлены в ордер");
                     break;
                 }
                 else
                 {
+                    countOfProductsInOrder++; 
                     var productId = Convert.ToInt64(input);
                     Console.WriteLine("Введите количество.");
                     var productValue = Convert.ToInt32(Console.ReadLine());
 
-                    OrdersProductsRepo.InsertProductInOrder(orderId, productId, productValue);
-                    sum += ProductsRepo.GetProductById(productId).Price * productValue;
-                    UpdateOrders(orderId, sum);
-                    create = true;
+                    AddProductInOrder(productId, productValue, orderId);
                 }
             }
 
-
-            if (create)
-            {
-                Console.WriteLine("Order added.");
-            }
-            else
+            if (countOfProductsInOrder == 0)
             {
                 DeleteOrder(orderId);
-                Console.WriteLine("Продукты не добавлены в ордер.");
             }
- 
+        }
+
+        internal static void AddProductInOrder(long productID, int value, long orderId)
+        {
+            var sum = GetOrderById(orderId).Sum;
+            OrdersProductsRepo.InsertProductInOrder(orderId, productID, value);
+            sum += ProductsRepo.GetProductById(productID).Price * value;
+            UpdateOrders(orderId, sum);               
         }
 
         private static void DeleteOrder(long orderId)
@@ -140,7 +141,7 @@ namespace eBay_DB.Repositories
             string affectedRowsCount = cmd.ExecuteNonQuery().ToString();
         }
 
-        private static long LastOrderId()
+        internal static long LastOrderId()
         {
             var query = @"SELECT * 
                           FROM orders 

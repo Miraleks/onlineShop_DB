@@ -38,28 +38,21 @@ namespace eBay_DB.Generators
         public static void GenerateOrders(int count)
         {
             var rnd = new Random();
-            var productsInOrder = rnd.Next(1, 10);
-            var productsId = 0;
-            while (count > 0)
+
+            for (int i = 0; i < count; i++)          
             {
-                var order = new Order();
-                //var product = new Product();
 
-                while(productsInOrder > 0)
+                OrdersRepo.CreateOrder();
+                var orderId = OrdersRepo.LastOrderId();
+                var productsInOrder = rnd.Next(1, 10);
+
+                for (int j = 0; j < productsInOrder; j++)
                 {
-                    //Product product1 = new Product();
-                    //id ордера - последнее с автоматическим созданием записи и возвратом id созданной записи
-                    //случайная выборка из products по id
-                    //случайное назначение количества выбранных продуктов
-                    //подсчет суммы продуктов и внесение в поле ордера
-
-                    var newProduct = new Product();
-                    
-
+                    var productId = rnd.Next(1, ProductsRepo.GetCountRecords());
+                    OrdersRepo.AddProductInOrder(productId, rnd.Next(1, 20), orderId);
                 }
-
-
             }
+            Console.WriteLine($"Создано ордеров: {count}");
         }
 
         static Product GenerateProduct()

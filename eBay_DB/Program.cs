@@ -27,11 +27,11 @@ namespace eBay_DB
             TablesGenerators.CreateOrdersTable();
             TablesGenerators.CreateOrderProductTable();
 
-            /*
-             генератор пользователей
-            */
+            #region генератор пользователей
 
             //EntityGenerator.GenerateCustomer(20);
+
+            #endregion
 
             //var customers = CustomersRepo.GetAllCustomers();
 
@@ -50,10 +50,12 @@ namespace eBay_DB
 
             //CustomersRepo.AddNewCustomer();
 
-            /*
-             генератор продуктов
-             */
+            #region генератор продуктов
+
             //EntityGenerator.AddProduct(20);
+
+            #endregion
+
 
             //var products = ProductsRepo.GetAllProducts();
 
@@ -62,11 +64,20 @@ namespace eBay_DB
             //    Console.WriteLine(item);
             //}
 
-            /*
-             добавление продуктов в ордер
-             */
+
+            #region добавление продуктов в ордер
 
             //OrdersRepo.AddProductInOrderDialog();
+
+            #endregion
+
+            #region генератор ордеров
+
+            //EntityGenerator.GenerateOrders(5);
+
+            #endregion
+
+
 
             //var prod = ProductsRepo.GetProductById(12);
 
@@ -81,7 +92,9 @@ namespace eBay_DB
 
 
 
+
             var orders = OrdersRepo.GetOrders();
+            orders.Sort((ord1, ord2) => ord1.Id.CompareTo(ord2.Id));
 
             foreach (var item in orders)
             {

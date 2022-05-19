@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using eBay_DB.Models;
 using Npgsql;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -81,6 +82,16 @@ namespace eBay_DB.Repositories
             var productById = GetAllProducts().Where(result => result.Id == id).FirstOrDefault();
             return productById;
            
+        }
+
+        public static int GetCountRecords()
+        {
+            var query = "SELECT count(*) FROM products";
+            using(var connection = new NpgsqlConnection(Data.Config.SqlConnectionString))
+            {
+                return Convert.ToInt32(connection.ExecuteScalar(query));
+                 
+            }
         }
 
     }
